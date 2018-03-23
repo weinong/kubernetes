@@ -14,6 +14,7 @@ existence only. Users can edit these addons as they want. In particular:
 	- Addon will only be created/re-created with the given template file when there is no
 	instance of the resource with that name.
 	- Addon will not be deleted when the manifest file is deleted from the `$ADDON_PATH`.
+- Addons with label `addonmanager.kubernetes.io/mode=EnsureDelete` will be periodically deleted.
 
 Notes:
 - Label `kubernetes.io/cluster-service=true` is deprecated (only for Addon Manager).
@@ -25,6 +26,7 @@ Otherwise it will be omitted.
 - The above label and namespace rule does not stand for `/opt/namespace.yaml` and
 resources under `/etc/kubernetes/admission-controls/`. addon-manager will attempt to
 create them regardless during startup.
+- Due to [Issue 40635](https://github.com/kubernetes/kubernetes/issues/40635), `addonmanager.kubernetes.io/mode=Reconcile` doesn't delete the addons when it's removed from `$ADDON_PATH`.
 
 #### How to release
 

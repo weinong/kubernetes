@@ -145,6 +145,14 @@ function ensure_addons() {
   log INFO "== Kubernetes addon ensure completed at $(date -Is) =="
 }
 
+function ensure_delete() {
+  # Delete objects that have ADDON_MANAGER_LABEL=EnsureDelete label
+  ${KUBECTL} ${KUBECTL_OPTS} delete -f ${ADDON_PATH} \
+    -l ${ADDON_MANAGER_LABEL}=EnsureDelete 2>&1
+
+  log INFO "== Kubernetes addon ensure delete at $(date -Is) =="
+}
+
 function is_leader() {
   # In multi-master setup, only one addon manager should be running. We use
   # existing leader election in kube-controller-manager instead of implementing
@@ -201,6 +209,7 @@ while true; do
   start_sec=$(date +"%s")
   if is_leader; then
     ensure_addons
+    ensure_delete
     reconcile_addons
   else
     log INFO "Not elected leader, going back to sleep."
